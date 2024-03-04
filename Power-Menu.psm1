@@ -69,7 +69,7 @@ function Draw-Menu
     )
 
     # Loop through options, highlighting current cursor position.
-    for($i = 0; $i -le $Options.length; $i ++) {
+    for($i = 0; $i -le $Options.Count; $i ++) {
         if($null -ne $Options[$i]) {
             $Option = $Options[$i]
 
@@ -173,7 +173,7 @@ function New-SelectMenu
     $POS = 0
     $CurrentSelection = @()
 
-    if ($Options.length -gt 0) {
+    if ($Options.Count -gt 0) {
         try {
             [console]::CursorVisible = $False
             Draw-Menu -Options $Options -POS $POS -CurrentSelection $CurrentSelection -Multiselect $Multiselect -Emoji $Emoji
@@ -182,23 +182,23 @@ function New-SelectMenu
                 $Key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown").VirtualKeyCode
 
                 # UP ARROW GOES TO NEXT OPTION UP
-                if ($Key -eq 38 -and $Options.length -gt 0) {            
+                if ($Key -eq 38) {            
                     $POS--
                 } 
                 
                 # DOWN ARROW GOES TO NEXT OPTION DOWN
-                if ($Key -eq 40 -and $Options.length -gt 0) {
+                if ($Key -eq 40) {
                     $POS++
                 }
 
                 # DOWN ARROW ON LAST ITEM GOES BACK TO FIRST ITEM
-                if ($POS -eq $Options.length) {
+                if ($POS -eq $Options.Count) {
                     $POS = 0
                 }
 
                 # UP ARROW ON FIRST ITEM GOES DOWN TO LAST ITEM
                 if ($POS -lt 0) {
-                    $POS = $Options.length - 1
+                    $POS = $Options.Count - 1
                 }
 
                 # SPACEBAR SELECTS AN OPTION IN MULTISELECT MENU
@@ -213,7 +213,7 @@ function New-SelectMenu
 
                 if ($Key -ne 27) {
                     try {
-                        $NewPOS = [System.Console]::CursorTop - $Options.length
+                        $NewPOS = [System.Console]::CursorTop - $Options.Count
                         [System.Console]::SetCursorPosition(0, $NewPOS)
                     } catch {
                         Clear-Host
@@ -224,7 +224,7 @@ function New-SelectMenu
             }
         } finally {
             try {
-			    [System.Console]::SetCursorPosition(0, $NewPOS + $Options.length)
+			    [System.Console]::SetCursorPosition(0, $NewPOS + $Options.Count)
             } catch {
                 Clear-Host
             }
